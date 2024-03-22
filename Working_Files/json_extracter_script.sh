@@ -1,0 +1,8 @@
+python PythonFiles/json_extracter.py Process_final/Snapper_1_Trid/Snap_1_jsons Snap_1_full.csv video_info.csv
+python PythonFiles/json_extracter.py Process_final/Snapper_2_Trid/Snap_2_jsons Snap_2_full.csv video_info.csv
+python PythonFiles/json_extracter.py Process_final/Snapper_3_Trid/Snap_3_jsons Snap_3_full.csv video_info_3_5.csv
+python PythonFiles/json_extracter.py Process_final/Snapper_4_Trid/Snap_4_jsons Snap_4_full.csv video_info.csv
+python PythonFiles/json_extracter.py Process_final/Snapper_5_Trid/Snap_5_jsons Snap_5_full.csv video_info_3_5.csv
+python PythonFiles/json_extracter.py Process_final/Snapper_11_Trid/Snap_11_jsons Snap_11_full.csv video_info.csv
+python PythonFiles/json_extracter.py Process_final/Snapper_12_Trid/Snap_12_jsons Snap_12_full.csv video_info.csv
+python PythonFiles/json_extracter.py Process_final/Snapper_16_Trid/Snap_16_jsons Snap_16_full.csv video_info.csv

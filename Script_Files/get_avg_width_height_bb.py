@@ -1,31 +1,26 @@
-# https://chat.openai.com/share/0b6f949b-6358-45d4-bf29-da9ad147f22c
-# Now need to figure out how to get actual coordinates and not coordinates from top of bounding box...
-# make parallel so it takes much less time
 import os
 import json
 import csv
 import argparse
 
-def calculate_midpoint(bbox):
-    ymin, xmin, ymax, xmax = bbox
-    midpoint_y = (ymin + ymax) / 2
-    midpoint_x = (xmin + xmax) / 2
-    return [midpoint_y, midpoint_x]
 
-def extract_highest_confidence_midpoints_from_folder(folder_path, output_csv, conf_threshold, video_metadata_csv, frames_per_second=30):
+
+def extract_highest_confidence_midpoints_from_folder(folder_path, output_csv, video_metadata,conf_threshold, frames_per_second=30):
     # Load video metadata from the provided CSV
-    with open(video_metadata_csv, 'r') as csvfile:
+    with open(video_metadata, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             video_width = int(row['video_width'])
             video_height = int(row['video_height'])
             break  # Assuming there is only one row in the CSV for a single video
-
     # Open CSV file for writing
     with open(output_csv, 'w', newline='') as csvfile:
-        fieldnames = ['t', 'x', 'y']
+        fieldnames = ['average_width', 'average_height']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
+        counter = 0
+        width_total = 0
+        height_total = 0
 
         # Iterate through JSON files in the folder
         for filename in os.listdir(folder_path):
@@ -53,40 +48,40 @@ def extract_highest_confidence_midpoints_from_folder(folder_path, output_csv, co
                             highest_confidence = confidence
                             highest_confidence_detection = detection
                     if highest_confidence_detection is not None:
-                        # Calculate the midpoint of the bounding box with highest confidence
+                        # Grab width and height of bboxes 
                         bounding_box = highest_confidence_detection['bbox']
-                        midpoint = calculate_midpoint(bounding_box)
+                        xmin, ymin, width, height = bounding_box
 
-                                        # Adjust x and y coordinates based on filename
+                        #Need to test whether doing these alterations both makes sense and works 
+                        # dependent on crop will size of bounding box need to be back adjusted
                         if 'right' in filename:
-                            midpoint[0] += 0.5
-                            midpoint[0] *= (video_width) 
-                            midpoint[1] *= 0.4
-                            midpoint[1] *= (video_height*2)
+                            width = (width*.65)
+
+                            height = (height*0.55)
                             
                         elif 'left' in filename:
-                            midpoint[0] *= (video_width)
-                            midpoint[1] *= 0.4
-                            midpoint[1] *= (video_height*2)
+                            width = (width*.65)
+                            height = (height*0.55)
                             
 
-                        elif 'foreground' in filename: # have to figure out how to scale
+                        elif 'foreground' in filename: 
+                            width = width
                             
-                            midpoint[0] *= (video_width*2)
-                            #midpoint[1] *= (0.6)
-                            midpoint[1] +=0.5
-                            midpoint[1] *= 0.6 
-                            midpoint[1] *= (video_height*2)
-                            
-                            # midpoint[1] += (video_height*0.4) # find way to add to bottom
+                            height = (height*0.75)
+                        width_total += width
+                        height_total += height
+                        counter +=1
+        #find the average width and height for bounding boxes and adjust from there
+        avg_width = (width_total / counter)
+        avg_height = (height_total / counter)
+        writer.writerow({'average_width': avg_width, 'average_height': avg_height})
+        print("average width = " + str(avg_width) + " ,average hegiht = " + str(avg_height) + " ,count = " + str(counter))
+ 
+        
 
-                        # Adjust midpoint based on video width and height
 
-                        # Increment time based on the assumption of 30 frames per second
-                        time_in_seconds = frame_number / frames_per_second
 
-                        # Write to CSV
-                        writer.writerow({'t': time_in_seconds, 'x': midpoint[1], 'y': midpoint[0]})
+                        
     
 
 if __name__ == "__main__":
@@ -100,4 +95,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Extract highest confidence midpoints and save to combined CSV
-    extract_highest_confidence_midpoints_from_folder(args.json_folder, args.output_csv, args.confidence_threshold, args.video_metadata_csv)
+    extract_highest_confidence_midpoints_from_folder(args.json_folder, args.output_csv, args.video_metadata_csv ,args.confidence_threshold)
