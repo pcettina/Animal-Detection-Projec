@@ -1,4 +1,4 @@
-# https://chat.openai.com/share/0b6f949b-6358-45d4-bf29-da9ad147f22c
+
 # make parallel so it takes much less time
 import os
 import json

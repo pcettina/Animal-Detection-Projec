@@ -1,6 +1,3 @@
-# https://chat.openai.com/share/0f359a5f-f544-486d-8633-a1e7148315e5
-# Works but needs to be white out and not blackout around rat
-
 import argparse
 import os
 import cv2
