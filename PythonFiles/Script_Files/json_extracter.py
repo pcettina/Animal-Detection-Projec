@@ -122,7 +122,7 @@ if __name__ == "__main__":
     parser.add_argument('output_csv', help='Path to the output combined CSV file')
     parser.add_argument('video_metadata_csv', help='Path to the CSV file containing video metadata (width and height)')
     parser.add_argument('bbox_metadata_csv', help='Path to the CSV file containing the average width and height of bbox for a video')
-    parse.add_argument('--frames_per_second', help='Frames per second of video that is processing')
+    parser.add_argument('--frames_per_second', help='Frames per second of video that is processing')
     parser.add_argument('--confidence_threshold', type=float, default=0.35, help='Confidence threshold (default: 0.35)')
 
     args = parser.parse_args()

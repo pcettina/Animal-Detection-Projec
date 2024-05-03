@@ -6,7 +6,7 @@ import csv
 def load_data(file_path):
     return np.genfromtxt(file_path, delimiter=',', names=['t', 'x', 'y'], skip_header=1)
 
-def find_states(data, bbox_data):
+def find_states(data, bbox_data, speed_type):
     # flag locations in the dataset where there was a prolonged non detection
     # End goal to give user access the determine where something went wrong
     avg_width, avg_height = bbox_data['average_width'], bbox_data['average_height']
@@ -15,11 +15,21 @@ def find_states(data, bbox_data):
     states = []
     prev_t, prev_x, prev_y = data[0]['t'], data[0]['x'], data[0]['y']
     first_row = True
+
+    #Different time intervals to check for missed detections given the different speeds organisms exhibit
+    time_check = 8
+
+    if(speed_type == "fast"):
+        time_check = 2
+    elif(speed_type == "medium"):
+        time_check = 5
+
+
     for row in data[1:]:
         t, y, x = row['t'], row['x'], row['y']
         if first_row:
             first_row = False
-        elif prev_t < t - 5:
+        elif prev_t < t - time_check:
             # Check against average size of the bounding box which could become input variable
             # Might have to ensure distance checking is working properly
             # Use euclidean distance between two points to do the check
@@ -60,9 +70,10 @@ if __name__ == '__main__':
     parser.add_argument('csv_folder', type=str, help='Path to the input CSV folder')
     parser.add_argument('bbox_metadata', type=str, help='Path to the avg. bounding box size')
     parser.add_argument('output_folder', type=str, help='Path to the output folder')
+    parser.add_argument('--speed_type', type=str, choices=['fast', 'medium', 'slow'], default='medium', help='Type of movement speed the organism in question will exhibit')
 
     # Parse the arguments
     args = parser.parse_args()
 
     # Call the process_csv function with the provided CSV folder
-    process_csv(args.csv_folder, args.bbox_metadata, args.output_folder)
+    process_csv(args.csv_folder, args.bbox_metadata, args.output_folder, args.speed_type)

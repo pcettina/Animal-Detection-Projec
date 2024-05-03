@@ -86,7 +86,7 @@ def extract_highest_confidence_midpoints_from_folder(folder_path, output_csv, vi
 
 if __name__ == "__main__":
     # Parse command-line arguments
-    parser = argparse.ArgumentParser(description='Extract highest confidence midpoints from JSON files in a folder and save to a combined CSV.')
+    parser = argparse.ArgumentParser(description='Extract average bounding box sizes from JSON files in a folder and save to a CSV.')
     parser.add_argument('json_folder', help='Path to the folder containing input JSON files')
     parser.add_argument('output_csv', help='Path to the output combined CSV file')
     parser.add_argument('video_metadata_csv', help='Path to the CSV file containing video metadata (width and height)')
