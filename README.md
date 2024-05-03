@@ -52,5 +52,5 @@ In the future, this program should allow a user to check the states and change t
 
 [tortuosity.py](Script_Files/tortuosity.py)
 
-
+Calculate the measure of tortuosity given a/a set of CSV file(s) formatted (t,x,y). Calculates the Euclidean distance between subsequent points in the data set. The program then outputs the measure of tortuosity to a new CSV file formatted (video_name, tort_measure). The measure of tortuosity could be enhanced by interpolating between points to add more data and get a better idea of how guided/unguided the movement is. 
 
